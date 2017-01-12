@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>myBooks</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body ng-app="myApp">
+
+<div ng-controller="ToReadController">
+    <h2>Books to read</h2>
+
+    <form ng-submit="addBook()">
+        <div class="form-group row">
+            <div class="col-xs-4">
+                <label>Title</label>
+                <input class="form-control" type="text" ng-model="titleInput" placeholder="Add Title" required>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-xs-4">
+                <label>Author</label>
+                <input class="form-control" type="text"ng-model="authorInput" placeholder="Add Author" required>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-xs-2">
+                <label>Total Pages</label>
+                <input class="form-control" type="number" ng-model="totalPagesInput" min="0" placeholder="Add Total Pages" required>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-xs-2">
+                <label>Starting Date</label>
+                <input class="form-control" type="date" ng-model="startDateInput" required>
+            </div>
+        </div>
+        <input type="submit" class="btn" value="Add Book">
+    </form>
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th></th>
+            <th>#</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Read Pages</th>
+            <th>Total Pages</th>
+            <th>Add Page</th>
+            <th>Starting Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="book in bookList" >
+            <td><input type="checkbox" ng-model="book.done"></td>
+            <td><span ng-bind="$index+1"></span></td>
+            <td><span ng-bind="book.title"></span></td>
+            <td><span ng-bind="book.author"></span></td>
+            <td><span ng-bind="book.pagesRead"></span></td>
+            <td><span ng-bind="book.totalPages"></span></td>
+            <td><button ng-click="addPages($index)" class="btn">Add Pages</button></td>
+            <td>{{book.startDate | date: "dd-MM-yyyy"}}</span></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="btn-group">
+        <button ng-click="removeBook()" class="btn">Delete</button>
+    </div>
+</div>
+
+<!-- Controllers -->
+<script src="js/controllers/ToReadController.js"></script>
+
+<!-- LiveReload -->
+<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
+</body>
+</html>
