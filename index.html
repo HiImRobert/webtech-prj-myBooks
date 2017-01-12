@@ -3,76 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <title>myBooks</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="angular.min.js"></script>
+    <script src="js/controllers/ToReadController.js"></script>
 </head>
-<body ng-app="myApp">
+<body ng-app="myApp" ng-controller="ToReadController">
 
-<div ng-controller="ToReadController">
-    <h2>Books to read</h2>
-
-    <form ng-submit="addBook()">
-        <div class="form-group row">
-            <div class="col-xs-4">
-                <label>Title</label>
-                <input class="form-control" type="text" ng-model="titleInput" placeholder="Add Title" required>
-            </div>
+    <div class="container">
+        <h2>Books to read</h2>
+        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal">Add Book</button>
+        <hr>
+        <div class="alert alert-info" ng-if="message">
+            <a href="#" class="close" ng-click="clearMessage()">×</a>
+            <span ng-bind="message"></span>
         </div>
-        <div class="form-group row">
-            <div class="col-xs-4">
-                <label>Author</label>
-                <input class="form-control" type="text"ng-model="authorInput" placeholder="Add Author" required>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-xs-2">
-                <label>Total Pages</label>
-                <input class="form-control" type="number" ng-model="totalPagesInput" min="0" placeholder="Add Total Pages" required>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-xs-2">
-                <label>Starting Date</label>
-                <input class="form-control" type="date" ng-model="startDateInput" required>
-            </div>
-        </div>
-        <input type="submit" class="btn" value="Add Book">
-    </form>
-
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th></th>
-            <th>#</th>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Read Pages</th>
-            <th>Total Pages</th>
-            <th>Add Page</th>
-            <th>Starting Date</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="book in bookList" >
-            <td><input type="checkbox" ng-model="book.done"></td>
-            <td><span ng-bind="$index+1"></span></td>
-            <td><span ng-bind="book.title"></span></td>
-            <td><span ng-bind="book.author"></span></td>
-            <td><span ng-bind="book.pagesRead"></span></td>
-            <td><span ng-bind="book.totalPages"></span></td>
-            <td><button ng-click="addPages($index)" class="btn">Add Pages</button></td>
-            <td>{{book.startDate | date: "dd-MM-yyyy"}}</span></td>
-        </tr>
-        </tbody>
-    </table>
-
-    <div class="btn-group">
-        <button ng-click="removeBook()" class="btn">Delete</button>
     </div>
+
+    <div class="container">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Progress</th>
+                <th>Add Page</th>
+                <th>Period</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="book in bookList">
+                <td><span ng-bind="$index+1"></span></td>
+                <td><span ng-bind="book.title"></span></td>
+                <td><span ng-bind="book.author"></span></td>
+                <td><span ng-bind="book.pagesRead"></span>/<span ng-bind="book.totalPages"></span></td>
+                <td><button ng-click="addPages($index)" class="btn btn-default btn-xs">Add Pages</button></td>
+                <td>{{book.startDate | date: "dd/MM/yyyy"}}</span>-...</td>
+                <td><button type="button" class="btn btn-info btn-xs" data-toggle="modal", data-target="#myModalEdit" ng-click="selectBook(book)">
+                    Edit</button>
+                </td>
+                <td><button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModalDelete" ng-click="selectBook(book)">
+                    Delete</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">New Book</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form>
+                        <div class="form-group row">
+                            <div class="col-xs-10">
+                                <label>Title</label>
+                                <input class="form-control" type="text" ng-model="titleInput" placeholder="Add Title">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-xs-10">
+                                <label>Author</label>
+                                <input class="form-control" type="text" ng-model="authorInput" placeholder="Add Author">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-xs-5">
+                                <label>Total Pages</label>
+                                <input class="form-control" type="number" ng-model="totalPagesInput" min="0" placeholder="Add Total Pages">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-xs-5">
+                                <label>Starting Date</label>
+                                <input class="form-control" type="date" ng-model="startDateInput">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-default" ng-click="addBook()" data-dismiss="modal">Save</button>
+
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 </div>
 
-<!-- Controllers -->
-<script src="js/controllers/ToReadController.js"></script>
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="myModalEdit" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Edit Book</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form>
+
+                        <div class="form-group row">
+                            <div class="col-xs-10">
+                                <label>Title</label>
+                                <input class="form-control" type="text" ng-model="newBook.title" placeholder="Add Title">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-xs-10">
+                                <label>Author</label>
+                                <input class="form-control" type="text" ng-model="newBook.author" placeholder="Add Author">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-xs-5">
+                                <label>Total Pages</label>
+                                <input class="form-control" type="number" ng-model="newBook.totalPages" min="0" placeholder="Add Total Pages">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-xs-5">
+                                <label>Starting Date</label>
+                                <input class="form-control" type="date" ng-model="newBook.startDate">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-default" ng-click="updateBook()" data-dismiss="modal">Save</button>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="myModalDelete" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Are you sure?</h4>
+                </div>
+                <div class="modal-body">
+                    <strong style="color: red;">
+                        You are going to delete this book
+                    </strong>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="deleteBook()">Yes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
 
 <!-- LiveReload -->
 <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>

@@ -3,8 +3,17 @@ var app = angular.module("myApp", []);
 app.controller('ToReadController', ['$scope', function ($scope) {
 
     $scope.bookList = [
-        {title: 'Ends and Means', author: 'Aldous Huxley', pagesRead: 88, totalPages: 330, done: false, startDate: new Date(2016, 10, 15)}
+        {title: 'titlu', author: 'autor', pagesRead: 0, totalPages: 500, startDate: new Date(2016, 10, 15)},
+        {title: 'titlu', author: 'autor', pagesRead: 0, totalPages: 500, startDate: new Date(2016, 10, 15)},
+        {title: 'titlu', author: 'autor', pagesRead: 0, totalPages: 500, startDate: new Date(2016, 10, 15)}
     ];
+
+//    $scope.newBook = {};
+//
+//    $scope.saveBook = function()  {
+//        $scope.bookList.push($scope.newBook);
+//        $scope.newBook = {};
+//    };
 
     $scope.addBook = function () {
         $scope.bookList.push({
@@ -19,6 +28,8 @@ app.controller('ToReadController', ['$scope', function ($scope) {
         $scope.authorInput = "";
         $scope.totalPagesInput = "";
         $scope.startDateInput = new Date();
+
+        $scope.message = "New Book Added"
     };
     
     $scope.addPages = function (index) {
@@ -27,12 +38,34 @@ app.controller('ToReadController', ['$scope', function ($scope) {
         }
     };
 
-    $scope.removeBook = function () {
-        var oldBookList = $scope.bookList;
-        $scope.bookList = [];
-        angular.forEach(oldBookList, function (book) {
-            if (!book.done) $scope.bookList.push(book);
-        });
+    //$scope.newBook = {};
+    //$scope.clickedBook = {};
+
+    $scope.selectBook = function(book) {
+        $scope.newBook = book;
     };
+
+    $scope.updateBook = function() {
+         $scope.message = "Book Updated"
+    }
+
+    $scope.deleteBook = function() {
+        $scope.bookList.splice($scope.bookList.indexOf($scope.newBook), 1);
+         $scope.message = "Book Deleted"
+    };
+
+    //$scope.message = ""
+
+    $scope.clearMessage = function() {
+            $scope.message = ""
+    }
+
+//    $scope.removeBook = function () {
+//        var oldBookList = $scope.bookList;
+//        $scope.bookList = [];
+//        angular.forEach(oldBookList, function (book) {
+//            if (!book.done) $scope.bookList.push(book);
+//        });
+//    };
 
 }]);
